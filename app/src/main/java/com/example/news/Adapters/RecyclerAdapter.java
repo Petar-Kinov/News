@@ -1,9 +1,11 @@
 package com.example.news.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     private Context context;
     private final String TAG = "Debug";
     private OnArticleClickedListener onArticleClickedListener;
+    private Button favouriteButton;
 
     public RecyclerAdapter(Context context, ArrayList<Article> articles, OnArticleClickedListener onArticleClickedListener) {
         this.context = context;
@@ -28,25 +31,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.onArticleClickedListener = onArticleClickedListener;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder  {
         private TextView titleText;
         private ImageView newsImage;
         private TextView date;
         OnArticleClickedListener onArticleClickedListener;
+
 
         public MyViewHolder(final View view, OnArticleClickedListener onArticleClickedListener){
             super(view);
             titleText = view.findViewById(R.id.headline);
             newsImage = view.findViewById(R.id.NewsImage);
             date = view.findViewById(R.id.date);
-            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
             this.onArticleClickedListener = onArticleClickedListener;
+            itemView.setOnClickListener(view1 -> {
+                onArticleClickedListener.onClickListener(getAdapterPosition());
+            });
+            favouriteButton = view.findViewById(R.id.favouritesButton);
+            favouriteButton.setOnClickListener(view1 -> {
+                 onArticleClickedListener.favouriteClickListener(getAdapterPosition());
+            });
         }
 
-        @Override
-        public void onClick(View view) {
-            onArticleClickedListener.onClickListener(getAdapterPosition());
-        }
     }
 
     @Override
@@ -65,8 +72,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 .override(300,300)
                 .into(holder.newsImage);
 
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -75,7 +82,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     public interface OnArticleClickedListener {
         void onClickListener (int position);
+        void favouriteClickListener(int position);
     }
+
+
+
 }
 
 

@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.news.Adapters.RecyclerAdapter;
-import com.example.news.MainActivity;
+import com.example.news.DataBase.DataBase;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
 import com.example.news.Repository.ApiResponce;
@@ -35,6 +35,7 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
     private final String TAG = "Debug";
     private ArticlesViewModel articlesViewModel;
     private SearchView searchView;
+    private DataBase db;
 
 
     @Override
@@ -86,6 +87,7 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
     private void setRecyclerAdapter() {
         RecyclerAdapter adapter = new RecyclerAdapter(getContext(),articles, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
@@ -96,10 +98,24 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         openWebViewActivity(articles.get(position).getUrl());
     }
 
+    @Override
+    public void favouriteClickListener(int position) {
+        saveFavourite(articles.get(position));
+        Log.d(TAG,String.valueOf(db.userDao().getAll().size()));
+    }
+
+
     public void openWebViewActivity(String url){
         Intent intent = new Intent(this.getActivity(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
 
+    }
+
+    private void saveFavourite(Article article){
+        db = DataBase.getINSTANCE(this.getContext());
+        Log.d(TAG,"Saved to fabvourites");
+
+        db.userDao().insert(article);
     }
 }

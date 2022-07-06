@@ -1,9 +1,21 @@
 package com.example.news.ModelClasses;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "ArticleDB")
 public class Article {
 
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
+    @ColumnInfo(name = "title")
     private String title;
+
+    @ColumnInfo(name = "url")
     private String url;
+
     private String description;
     private String urlToImage;
     private String publishedAt;

@@ -1,5 +1,6 @@
 package com.example.news;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -11,12 +12,16 @@ import com.example.news.Fragments.NewsFragment;
 import com.example.news.Fragments.SpareFragment;
 import com.example.news.Repository.NewsRepository;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private final String TAG = "Debug";
+    private ArrayList<String> tabTitles;
 
     private final NewsRepository newsRepository = NewsRepository.getInstance();
 
@@ -33,11 +38,14 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(new NewsFragment());
         viewPagerAdapter.addFragment(new FavouritesFragment());
         viewPagerAdapter.addFragment(new SpareFragment());
-
         viewPager2.setAdapter(viewPagerAdapter);
 
+        tabTitles = new ArrayList<String>();
+        tabTitles.add("News");
+        tabTitles.add("Favourites");
+        tabTitles.add("Spare");
 
-
+        new TabLayoutMediator(tabLayout,viewPager2,this).attach();
 
         //News Observer
 //        mNewsViewModel.getNews().observe(this, new Observer<List<NewsStory>>() {
@@ -65,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
+    @Override
+    public void onConfigureTab(TabLayout.Tab tab, int position) {
+        tab.setText(tabTitles.get(position));
+    }
 }
