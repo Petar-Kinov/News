@@ -29,10 +29,9 @@ import java.util.ArrayList;
 
 public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleClickedListener {
 
-    private RecyclerView recyclerView;
-
-    private ArrayList<Article> articles;
     private final String TAG = "Debug";
+    private RecyclerView recyclerView;
+    private ArrayList<Article> articles;
     private ArticlesViewModel articlesViewModel;
     private SearchView searchView;
     private DataBase db;
@@ -49,17 +48,12 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         //Recycler Adapter
         setRecyclerAdapter();
         articlesViewModel = new ViewModelProvider(requireActivity()).get(ArticlesViewModel.class);
-        articlesViewModel.getApiResponseLiveData().observe(requireActivity(), new Observer<ApiResponce>() {
-            @Override
-            public void onChanged(ApiResponce apiResponce) {
-                Log.d(TAG,"Live data changed. Size is " + apiResponce.getTotalResults());
-                articles.clear();
-                for (int i = 0; i < apiResponce.getArticles().size() ; i++){
-                    articles.add(apiResponce.getArticles().get(i));
-                }
+        articlesViewModel.getApiResponseLiveData().observe(requireActivity(), apiResponce -> {
+            Log.d(TAG, "Live data changed. Size is " + apiResponce.getTotalResults());
+            articles.clear();
+            articles.addAll(apiResponce.getArticles());
 
-                setRecyclerAdapter();
-            }
+            setRecyclerAdapter();
         });
 
         // Search view functionality
@@ -80,10 +74,10 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
             }
         });
 
-
         return view;
 
     }
+
     private void setRecyclerAdapter() {
         RecyclerAdapter adapter = new RecyclerAdapter(getContext(),articles, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

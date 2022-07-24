@@ -17,16 +17,16 @@ import com.example.news.R;
 
 import java.util.ArrayList;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    private ArrayList<Article> articles;
+public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRecyclerAdapter.MyViewHolder> {
+    private ArrayList<Article> favourites;
     private Context context;
     private final String TAG = "Debug";
     private OnArticleClickedListener onArticleClickedListener;
-    private Button favouriteButton;
+    private Button deleteButton;
 
-    public RecyclerAdapter(Context context, ArrayList<Article> articles, OnArticleClickedListener onArticleClickedListener) {
+    public FavouritesRecyclerAdapter(Context context, ArrayList<Article> articles, OnArticleClickedListener onArticleClickedListener) {
         this.context = context;
-        this.articles = articles;
+        this.favourites = articles;
         this.onArticleClickedListener = onArticleClickedListener;
     }
 
@@ -45,26 +45,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 //            itemView.setOnClickListener(this);
             this.onArticleClickedListener = onArticleClickedListener;
             itemView.setOnClickListener(view1 -> onArticleClickedListener.onClickListener(getAdapterPosition()));
-            favouriteButton = view.findViewById(R.id.deleteButton);
-            favouriteButton.setOnClickListener(view1 -> onArticleClickedListener.favouriteClickListener(getAdapterPosition()));
+            deleteButton = view.findViewById(R.id.deleteButton);
+            deleteButton.setOnClickListener(view1 -> onArticleClickedListener.favouriteClickListener(getAdapterPosition()));
         }
 
     }
 
     @NonNull
     @Override
-    public RecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FavouritesRecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,parent,false);
         return new MyViewHolder(view, onArticleClickedListener);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter.MyViewHolder holder, int position) {
-        String headline = articles.get(position).getTitle();
+    public void onBindViewHolder(FavouritesRecyclerAdapter.MyViewHolder holder, int position) {
+        String headline = favourites.get(position).getTitle();
         holder.titleText.setText(headline);
-        holder.date.setText(articles.get(position).getPublishedAt());
+        holder.date.setText(favourites.get(position).getPublishedAt());
         Glide.with(context)
-                .load(articles.get(position).getUrlToImage())
+                .load(favourites.get(position).getUrlToImage())
                 .override(300,300)
                 .into(holder.newsImage);
 
@@ -73,7 +73,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return articles.size();
+        return favourites.size();
     }
 
     public interface OnArticleClickedListener {

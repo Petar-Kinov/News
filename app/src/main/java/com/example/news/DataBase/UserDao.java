@@ -16,6 +16,8 @@ public interface UserDao {
     @Query("SELECT * From ArticleDB")
     List<Article> getAll();
 
+
+
     @Insert
     void insert(Article article);
 

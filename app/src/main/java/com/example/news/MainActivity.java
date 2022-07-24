@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 
 import com.example.news.Adapters.ViewPagerAdapter;
+import com.example.news.DataBase.DataBase;
 import com.example.news.Fragments.FavouritesFragment;
 import com.example.news.Fragments.NewsFragment;
 import com.example.news.Fragments.SpareFragment;
@@ -16,12 +17,18 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 
+enum Fragment {
+    NEWS,
+    FAVOURITES
+}
+
 public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private final String TAG = "Debug";
     private ArrayList<String> tabTitles;
+    private Aplication aplication;
 
     private final NewsRepository newsRepository = NewsRepository.getInstance();
 
@@ -40,12 +47,16 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
         viewPagerAdapter.addFragment(new SpareFragment());
         viewPager2.setAdapter(viewPagerAdapter);
 
-        tabTitles = new ArrayList<String>();
+        tabTitles = new ArrayList<>();
         tabTitles.add("News");
         tabTitles.add("Favourites");
         tabTitles.add("Spare");
 
         new TabLayoutMediator(tabLayout,viewPager2,this).attach();
+
+        aplication = new Aplication(getApplicationContext());
+
+
 
         //News Observer
 //        mNewsViewModel.getNews().observe(this, new Observer<List<NewsStory>>() {
@@ -80,4 +91,5 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
     public void onConfigureTab(TabLayout.Tab tab, int position) {
         tab.setText(tabTitles.get(position));
     }
+
 }
