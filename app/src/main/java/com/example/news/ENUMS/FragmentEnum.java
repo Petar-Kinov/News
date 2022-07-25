@@ -1,4 +1,6 @@
 package com.example.news.ENUMS;
 
-public class FragmentEnum {
+public enum FragmentEnum {
+    NEWS,
+    FAVOURITES
 }

@@ -30,7 +30,7 @@ public class FavouritesViewmodel extends ViewModel {
     }
 
 
-    public LiveData<DBResponce> getApiResponseLiveData(){
+    public LiveData<DBResponce> getFavouritesLiveData(){
         Log.d(TAG,"getApiResponseLive data called");
         return favouritesLiveData;
 

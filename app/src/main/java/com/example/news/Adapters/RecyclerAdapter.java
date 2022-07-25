@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
 
@@ -23,11 +24,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     private final String TAG = "Debug";
     private OnArticleClickedListener onArticleClickedListener;
     private Button favouriteButton;
+    private Button deleteButton;
+    private String fragment;
 
-    public RecyclerAdapter(Context context, ArrayList<Article> articles, OnArticleClickedListener onArticleClickedListener) {
+    public RecyclerAdapter(Context context, ArrayList<Article> articles, OnArticleClickedListener onArticleClickedListener,String fragment) {
         this.context = context;
         this.articles = articles;
         this.onArticleClickedListener = onArticleClickedListener;
+        this.fragment = fragment;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder  {
@@ -45,8 +49,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 //            itemView.setOnClickListener(this);
             this.onArticleClickedListener = onArticleClickedListener;
             itemView.setOnClickListener(view1 -> onArticleClickedListener.onClickListener(getAdapterPosition()));
-            favouriteButton = view.findViewById(R.id.deleteButton);
+            favouriteButton = view.findViewById(R.id.addFavouritesButton);
             favouriteButton.setOnClickListener(view1 -> onArticleClickedListener.favouriteClickListener(getAdapterPosition()));
+
+            deleteButton = view.findViewById(R.id.deleteButton);
+            deleteButton.setOnClickListener(view1 -> onArticleClickedListener.deleteClickListener(getAdapterPosition()));
         }
 
     }
@@ -60,6 +67,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.MyViewHolder holder, int position) {
+        if (fragment.equals(FragmentEnum.FAVOURITES.name())){
+            favouriteButton.setVisibility(View.GONE);
+        } else {
+            deleteButton.setVisibility(View.GONE);
+        }
         String headline = articles.get(position).getTitle();
         holder.titleText.setText(headline);
         holder.date.setText(articles.get(position).getPublishedAt());
@@ -79,6 +91,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public interface OnArticleClickedListener {
         void onClickListener (int position);
         void favouriteClickListener(int position);
+        void deleteClickListener(int position);
     }
 
 

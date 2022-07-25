@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.news.Adapters.RecyclerAdapter;
+import com.example.news.Aplication;
 import com.example.news.DataBase.DataBase;
+import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
 import com.example.news.Repository.ApiResponce;
@@ -44,6 +46,8 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
 
+        db = Aplication.getInstance();
+
         articles = new ArrayList<>();
         //Recycler Adapter
         setRecyclerAdapter();
@@ -64,7 +68,6 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
             public boolean onQueryTextSubmit(String s) {
                 articlesViewModel.setKeyword(searchView.getQuery().toString());
                 searchView.clearFocus();
-//                searchView.setIconified(true);
                 return false;
             }
 
@@ -79,7 +82,7 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
     }
 
     private void setRecyclerAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(getContext(),articles, this);
+        RecyclerAdapter adapter = new RecyclerAdapter(getContext(),articles, this, FragmentEnum.NEWS.name());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
@@ -98,6 +101,11 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         Log.d(TAG,String.valueOf(db.userDao().getAll().size()));
     }
 
+    @Override
+    public void deleteClickListener(int position) {
+
+    }
+
 
     public void openWebViewActivity(String url){
         Intent intent = new Intent(this.getActivity(), WebViewActivity.class);
@@ -107,7 +115,6 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
     }
 
     private void saveFavourite(Article article){
-        db = DataBase.getINSTANCE(this.getContext());
         Log.d(TAG,"Saved to fabvourites");
 
         db.userDao().insert(article);

@@ -17,7 +17,6 @@ public interface UserDao {
     List<Article> getAll();
 
 
-
     @Insert
     void insert(Article article);
 

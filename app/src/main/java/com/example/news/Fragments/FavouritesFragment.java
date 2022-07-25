@@ -6,22 +6,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.news.Adapters.RecyclerAdapter;
+import com.example.news.Aplication;
 import com.example.news.DataBase.DataBase;
-import com.example.news.MainActivity;
+import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
-import com.example.news.Repository.ApiResponce;
-import com.example.news.ViewModels.ArticlesViewModel;
+import com.example.news.Repository.DBRepository;
+import com.example.news.ViewModels.FavouritesViewmodel;
 import com.example.news.WebViewActivity;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
     private final String TAG = "Debug";
     private RecyclerView favouritesRecyclerView;
     private ArrayList<Article> favourites;
-    private ArticlesViewModel articlesViewModel;
+    private FavouritesViewmodel favouritesViewModel;
 //    private SearchView searchView;
     private DataBase db;
 
@@ -41,20 +40,21 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
-        favouritesRecyclerView = view.findViewById(R.id.favouritesRecyclerView);
+        View view = inflater.inflate(R.layout.fragment_favourites, container, false);
+        favouritesRecyclerView = view.findViewById(R.id.favouritesView);
+        db = Aplication.getInstance();
 
         favourites = new ArrayList<>();
         //Recycler Adapter
         setRecyclerAdapter();
-        articlesViewModel = new ViewModelProvider(requireActivity()).get(ArticlesViewModel.class);
-        articlesViewModel.getApiResponseLiveData().observe(requireActivity(), apiResponce -> {
-            Log.d(TAG, "Live data changed. Size is " + apiResponce.getTotalResults());
+        favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewmodel.class);
+        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), dbResponse -> {
             favourites.clear();
-            favourites.addAll(apiResponce.getArticles());
-
+            favourites.addAll(dbResponse.getFavourites());
             setRecyclerAdapter();
         });
+
+        //TODO Search in Favourites
 
         // Search view functionality
 //        searchView = view.findViewById(R.id.searchView);
@@ -79,7 +79,7 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 
     }
     private void setRecyclerAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this);
+        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         favouritesRecyclerView.setLayoutManager(layoutManager);
@@ -98,6 +98,11 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
         Log.d(TAG,String.valueOf(db.userDao().getAll().size()));
     }
 
+    @Override
+    public void deleteClickListener(int position) {
+        deleteFavourite(favourites.get(position));
+    }
+
 
     public void openWebViewActivity(String url){
         Intent intent = new Intent(this.getActivity(), WebViewActivity.class);
@@ -107,9 +112,13 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
     }
 
     private void saveFavourite(Article article){
-        db = DataBase.getINSTANCE(this.getContext());
         Log.d(TAG,"Saved to fabvourites");
 
         db.userDao().insert(article);
+    }
+
+    private void deleteFavourite(Article article){
+        Log.d(TAG, String.valueOf(article.id));
+        db.userDao().delete(article);
     }
 }

@@ -45,7 +45,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
 //            itemView.setOnClickListener(this);
             this.onArticleClickedListener = onArticleClickedListener;
             itemView.setOnClickListener(view1 -> onArticleClickedListener.onClickListener(getAdapterPosition()));
-            deleteButton = view.findViewById(R.id.deleteButton);
+            deleteButton = view.findViewById(R.id.addFavouritesButton);
             deleteButton.setOnClickListener(view1 -> onArticleClickedListener.favouriteClickListener(getAdapterPosition()));
         }
 

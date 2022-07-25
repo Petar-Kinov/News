@@ -17,11 +17,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 
-enum Fragment {
-    NEWS,
-    FAVOURITES
-}
-
 public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy {
 
     private TabLayout tabLayout;
