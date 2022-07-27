@@ -14,7 +14,7 @@ public class FavouritesViewModel extends ViewModel {
     private final LiveData<List<Article>> favouritesLiveData;
     private final DBRepository dbRepository = new DBRepository();
 
-    public FavouritesViewModel( ){
+    public FavouritesViewModel() {
         super();
 //        favourites = favouritesDB.userDao().getAll();
         favouritesLiveData = dbRepository.getFavourites();
@@ -22,11 +22,11 @@ public class FavouritesViewModel extends ViewModel {
     }
 
 
-    public LiveData<List<Article>> getFavouritesLiveData(){
+    public LiveData<List<Article>> getFavouritesLiveData() {
         return favouritesLiveData;
     }
 
-    public void insertFavourite(Article article){
+    public void insertFavourite(Article article) {
         dbRepository.insertFavourite(article);
     }
 

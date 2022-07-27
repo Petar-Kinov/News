@@ -18,7 +18,7 @@ public class ArticlesViewModel extends ViewModel {
     private final LiveData<List<Article>> apiResponseLiveData;
     private final SavedStateHandle savedStateHandle;
 
-    public ArticlesViewModel(SavedStateHandle savedStateHandle){
+    public ArticlesViewModel(SavedStateHandle savedStateHandle) {
         super();
         this.savedStateHandle = savedStateHandle;
         LiveData<String> keywordLiveData = savedStateHandle.getLiveData("keyword");
@@ -29,16 +29,16 @@ public class ArticlesViewModel extends ViewModel {
 
     }
 
-    public LiveData<List<Article>> getApiResponseLiveData(){
-        Log.d(TAG,"getApiResponseLive data called");
+    public LiveData<List<Article>> getApiResponseLiveData() {
+        Log.d(TAG, "getApiResponseLive data called");
         return apiResponseLiveData;
 
     }
 
     // the word that is being searched
-    public void setKeyword(String keyword){
-        savedStateHandle.set("keyword",keyword);
-        Log.d(TAG,"Saved state handle set to : " + keyword);
+    public void setKeyword(String keyword) {
+        savedStateHandle.set("keyword", keyword);
+        Log.d(TAG, "Saved state handle set to : " + keyword);
     }
 
 }

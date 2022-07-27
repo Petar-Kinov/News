@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         viewPager2 = findViewById(R.id.viewPager2);
 
-        ViewPagerAdapter viewPagerAdapter= new ViewPagerAdapter(MainActivity.this);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(MainActivity.this);
         viewPagerAdapter.addFragment(new NewsFragment());
         viewPagerAdapter.addFragment(new FavouritesFragment());
         viewPagerAdapter.addFragment(new SpareFragment());
@@ -45,11 +45,10 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
         tabTitles.add("Favourites");
         tabTitles.add("Spare");
 
-        new TabLayoutMediator(tabLayout,viewPager2,this).attach();
+        new TabLayoutMediator(tabLayout, viewPager2, this).attach();
 
 
         Aplication aplication = new Aplication(getApplicationContext());
-
 
 
         //News Observer

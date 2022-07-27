@@ -28,7 +28,7 @@ public class ArticleListAdapter extends ListAdapter<Article, MyViewHolder> {
 
 
     // Glide needs context
-    public ArticleListAdapter(@NonNull DiffUtil.ItemCallback<Article> diffCallback,OnClickListener onClickListener, String fragment) {
+    public ArticleListAdapter(@NonNull DiffUtil.ItemCallback<Article> diffCallback, OnClickListener onClickListener, String fragment) {
         super(diffCallback);
         this.onClickListener = onClickListener;
         this.fragment = fragment;
@@ -47,14 +47,14 @@ public class ArticleListAdapter extends ListAdapter<Article, MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called");
         Article current = getItem(position);
-        holder.bind(context,current, fragment);
+        holder.bind(context, current, fragment);
     }
 
     public static class ArticleDiff extends DiffUtil.ItemCallback<Article> {
 
         @Override
         public boolean areItemsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem == newItem;
+            return oldItem.equals(newItem);
         }
 
         @Override
@@ -67,8 +67,10 @@ public class ArticleListAdapter extends ListAdapter<Article, MyViewHolder> {
 
 
     public interface OnClickListener {
-        void onClickListener (int position);
+        void onClickListener(int position);
+
         void favouriteClickListener(int position);
+
         void deleteClickListener(int position);
     }
 }

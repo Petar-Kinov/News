@@ -64,6 +64,7 @@ public class Article {
         this.publishedAt = publishedAt;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Article{" +

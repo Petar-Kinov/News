@@ -27,19 +27,19 @@ public class NewsRepository {
 
 
     private static final NewsRepository repository = new NewsRepository();
-    public static NewsRepository getInstance(){
+
+    public static NewsRepository getInstance() {
         return repository;
     }
 
-    public static Retrofit getNewsApiClient(){
-        Retrofit retrofit = new Retrofit.Builder()
+    public static Retrofit getNewsApiClient() {
+        return new Retrofit.Builder()
                 .baseUrl("https://newsapi.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        return retrofit;
     }
 
-    public LiveData<List<Article>> getArticles(String keyword){
+    public LiveData<List<Article>> getArticles(String keyword) {
         NewsAPI newsAPICall = getNewsApiClient().create(NewsAPI.class);
         ApiResponse apiResponse = new ApiResponse();
 
@@ -48,27 +48,27 @@ public class NewsRepository {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String date = year + "-" + month + "-" + day;
         String API_KEY = "e866de2876a34769996a3b6f775bceaf";
-        Call<ApiResponse> call = newsAPICall.getResponse(keyword, date ,"publishedAt" ,"en", API_KEY);
+        Call<ApiResponse> call = newsAPICall.getResponse(keyword, date, "publishedAt", "en", API_KEY);
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 if (!response.isSuccessful() || response.body() == null) {
                     Log.d(TAG, "onResponse:  Get Profile Data Failed ");
                 } else {
-                    Log.d(TAG,"Api call is successful");
+                    Log.d(TAG, "Api call is successful");
                     apiResponse.setStatus(response.body().getStatus());
                     apiResponse.setTotalResults(response.body().getTotalResults());
                     apiResponse.setArticles(response.body().getArticles());
-                    Log.d(TAG,"Response size is " + apiResponse.getTotalResults());
+                    Log.d(TAG, "Response size is " + apiResponse.getTotalResults());
                     apiResponseMutableLiveData.setValue(apiResponse.getArticles());
                 }
 
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.d(TAG,"onFailure : News API Call failed" + t.toString());
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
+                Log.d(TAG, "onFailure : News API Call failed" + t);
             }
         });
 

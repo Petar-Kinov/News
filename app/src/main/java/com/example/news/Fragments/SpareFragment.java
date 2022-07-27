@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.news.R;
 
-public class SpareFragment  extends Fragment {
+public class SpareFragment extends Fragment {
 
 
     @Override

@@ -30,14 +30,14 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         this.onArticleClickedListener = onArticleClickedListener;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder  {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView titleText;
         private ImageView newsImage;
         private TextView date;
         OnArticleClickedListener onArticleClickedListener;
 
 
-        public MyViewHolder(final View view, OnArticleClickedListener onArticleClickedListener){
+        public MyViewHolder(final View view, OnArticleClickedListener onArticleClickedListener) {
             super(view);
             titleText = view.findViewById(R.id.headline);
             newsImage = view.findViewById(R.id.NewsImage);
@@ -54,7 +54,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     @NonNull
     @Override
     public FavouritesRecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card, parent, false);
         return new MyViewHolder(view, onArticleClickedListener);
     }
 
@@ -65,7 +65,7 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
         holder.date.setText(favourites.get(position).getPublishedAt());
         Glide.with(context)
                 .load(favourites.get(position).getUrlToImage())
-                .override(300,300)
+                .override(300, 300)
                 .into(holder.newsImage);
 
     }
@@ -77,10 +77,10 @@ public class FavouritesRecyclerAdapter extends RecyclerView.Adapter<FavouritesRe
     }
 
     public interface OnArticleClickedListener {
-        void onClickListener (int position);
+        void onClickListener(int position);
+
         void favouriteClickListener(int position);
     }
-
 
 
 }

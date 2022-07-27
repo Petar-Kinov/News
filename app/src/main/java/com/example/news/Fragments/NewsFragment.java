@@ -48,14 +48,14 @@ public class NewsFragment extends Fragment implements ArticleListAdapter.OnClick
 
         //Recycler Adapter
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        ArticleListAdapter adapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(),this , FragmentEnum.NEWS.name());
+        ArticleListAdapter adapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(), this, FragmentEnum.NEWS.name());
         adapter.submitList(articles);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        favouritesViewmodel =new ViewModelProvider(this).get(FavouritesViewModel.class);
+        favouritesViewmodel = new ViewModelProvider(this).get(FavouritesViewModel.class);
 
         articlesViewModel = new ViewModelProvider(requireActivity()).get(ArticlesViewModel.class);
         articlesViewModel.getApiResponseLiveData().observe(requireActivity(), response -> {
@@ -103,7 +103,7 @@ public class NewsFragment extends Fragment implements ArticleListAdapter.OnClick
     }
 
 
-    public void openWebViewActivity(String url){
+    public void openWebViewActivity(String url) {
         Intent intent = new Intent(this.getActivity(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
@@ -112,18 +112,18 @@ public class NewsFragment extends Fragment implements ArticleListAdapter.OnClick
 }
 
 // Background thread for adding favourites
-class addFavouritesRunnable implements Runnable{
+class addFavouritesRunnable implements Runnable {
     Article article;
     FavouritesViewModel favouritesViewmodel;
 
     // TODO figure out how to access FavouritesViewModel witchout passing it through the favouritesClickListener
-    addFavouritesRunnable(Article article, FavouritesViewModel favouritesViewmodel){
+    addFavouritesRunnable(Article article, FavouritesViewModel favouritesViewmodel) {
         this.article = article;
         this.favouritesViewmodel = favouritesViewmodel;
     }
 
     @Override
     public void run() {
-            favouritesViewmodel.insertFavourite(article);
+        favouritesViewmodel.insertFavourite(article);
     }
 }

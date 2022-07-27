@@ -26,7 +26,8 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     private Button deleteButton;
     private ImageView newsImage;
     private TextView date;
-    public MyViewHolder(@NonNull View itemView , ArticleListAdapter.OnClickListener onClickListener) {
+
+    public MyViewHolder(@NonNull View itemView, ArticleListAdapter.OnClickListener onClickListener) {
         super(itemView);
         title = itemView.findViewById(R.id.headline);
         favouriteButton = itemView.findViewById(R.id.addFavouritesButton);
@@ -37,7 +38,8 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         favouriteButton.setOnClickListener(view -> onClickListener.favouriteClickListener(getAdapterPosition()));
         deleteButton.setOnClickListener(view -> onClickListener.deleteClickListener(getAdapterPosition()));
     }
-//    private TextView titleText;
+
+    //    private TextView titleText;
 //    private ImageView newsImage;
 //    private TextView date;
 //
@@ -63,24 +65,25 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
 //        deleteButton.setOnClickListener(view1 -> onArticleClickedListener.deleteClickListener(getAdapterPosition()));
 //    }
 //
-public void bind(Context context, Article article, String fragment) {
-    Log.d(TAG, "bind: called" + article.getTitle());
-    title.setText(article.getTitle());
-    date.setText(article.getPublishedAt());
-    Glide.with(context)
-            .load(article.getUrlToImage())
-            .override(300,300)
-            .into(newsImage);
-    if (fragment.equals(FragmentEnum.FAVOURITES.name())){
-        favouriteButton.setVisibility(View.GONE);
-    } else {
-        deleteButton.setVisibility(View.GONE);
+    public void bind(Context context, Article article, String fragment) {
+        Log.d(TAG, "bind: called" + article.getTitle());
+        title.setText(article.getTitle());
+        date.setText(article.getPublishedAt());
+        Glide.with(context)
+                .load(article.getUrlToImage())
+                .override(300, 300)
+                .into(newsImage);
+        if (fragment.equals(FragmentEnum.FAVOURITES.name())) {
+            favouriteButton.setVisibility(View.GONE);
+        } else {
+            deleteButton.setVisibility(View.GONE);
+        }
     }
-}
-    static MyViewHolder create(ViewGroup parent, ArticleListAdapter.OnClickListener onClickListener){
+
+    static MyViewHolder create(ViewGroup parent, ArticleListAdapter.OnClickListener onClickListener) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card, parent, false);
         Log.d(TAG, "create: my view holder called");
-        return new MyViewHolder(view , onClickListener);
+        return new MyViewHolder(view, onClickListener);
     }
 //
 //    public interface OnArticleClickedListener {

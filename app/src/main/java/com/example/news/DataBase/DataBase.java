@@ -14,7 +14,7 @@ import com.example.news.ModelClasses.Article;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Article.class},version = 1)
+@Database(entities = {Article.class}, version = 1)
 public abstract class DataBase extends RoomDatabase {
 
     public abstract UserDao userDao();
@@ -25,9 +25,9 @@ public abstract class DataBase extends RoomDatabase {
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public static DataBase getINSTANCE(Context context) {
-        if(INSTANCE == null){
-            synchronized (DataBase.class){
-                INSTANCE = Room.databaseBuilder(context.getApplicationContext(),DataBase.class,"Database")
+        if (INSTANCE == null) {
+            synchronized (DataBase.class) {
+                INSTANCE = Room.databaseBuilder(context.getApplicationContext(), DataBase.class, "Database")
                         .build();
             }
         }

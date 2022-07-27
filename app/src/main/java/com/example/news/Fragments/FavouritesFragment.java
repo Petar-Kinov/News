@@ -122,7 +122,7 @@ public class FavouritesFragment extends Fragment implements ArticleListAdapter.O
     }
 
 
-    public void openWebViewActivity(String url){
+    public void openWebViewActivity(String url) {
         Intent intent = new Intent(this.getActivity(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
@@ -130,12 +130,13 @@ public class FavouritesFragment extends Fragment implements ArticleListAdapter.O
     }
 
     // Background thread for deleting an article
-    class deleteFavouriteRunnable implements Runnable{
+    class deleteFavouriteRunnable implements Runnable {
         Article article;
 
-        deleteFavouriteRunnable(Article article){
+        deleteFavouriteRunnable(Article article) {
             this.article = article;
         }
+
         @Override
         public void run() {
             db.userDao().delete(article);

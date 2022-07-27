@@ -11,7 +11,7 @@ public class Aplication {
         db = DataBase.getINSTANCE(context);
     }
 
-    public static DataBase getInstance(){
+    public static DataBase getInstance() {
         return db;
     }
 }

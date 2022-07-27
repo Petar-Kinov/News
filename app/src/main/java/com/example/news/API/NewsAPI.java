@@ -12,9 +12,9 @@ public interface NewsAPI {
 
     @GET("v2/everything")
     Call<ApiResponse> getResponse(@Query("q") String keyword,
-                                    @Query("from") String form,
-                                    @Query("sortBy") String publishedAt,
-                                    @Query("language") String language,
-                                    @Query("apiKey") String apiKey);
+                                  @Query("from") String form,
+                                  @Query("sortBy") String publishedAt,
+                                  @Query("language") String language,
+                                  @Query("apiKey") String apiKey);
 
 }
