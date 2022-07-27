@@ -1,11 +1,9 @@
 package com.example.news.Fragments;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,14 +16,11 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.news.Adapters.RecyclerAdapter;
-import com.example.news.Aplication;
-import com.example.news.DataBase.DataBase;
 import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
-import com.example.news.Repository.ApiResponce;
 import com.example.news.ViewModels.ArticlesViewModel;
-import com.example.news.ViewModels.FavouritesViewmodel;
+import com.example.news.ViewModels.FavouritesViewModel;
 import com.example.news.WebViewActivity;
 
 import java.util.ArrayList;
@@ -33,15 +28,12 @@ import java.util.ArrayList;
 
 public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleClickedListener {
 
-    private final String TAG = "Debug";
+    private static final String TAG = "NewsFragment";
     private RecyclerView recyclerView;
-    private RecyclerAdapter adapter;
     private ArrayList<Article> articles;
     private ArticlesViewModel articlesViewModel;
-    private FavouritesViewmodel favouritesViewmodel;
+    private FavouritesViewModel favouritesViewmodel;
     private SearchView searchView;
-    private DataBase db;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,19 +42,18 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        db = Aplication.getInstance();
-
         articles = new ArrayList<>();
+
         //Recycler Adapter
         setRecyclerAdapter();
 
-        favouritesViewmodel =new ViewModelProvider(this).get(FavouritesViewmodel.class);
+        favouritesViewmodel =new ViewModelProvider(this).get(FavouritesViewModel.class);
 
         articlesViewModel = new ViewModelProvider(requireActivity()).get(ArticlesViewModel.class);
-        articlesViewModel.getApiResponseLiveData().observe(requireActivity(), apiResponce -> {
-            Log.d(TAG, "Live data changed. Size is " + apiResponce.getTotalResults());
+        articlesViewModel.getApiResponseLiveData().observe(requireActivity(), response -> {
+            Log.d(TAG, "Live data changed. Size is " + response);
             articles.clear();
-            articles.addAll(apiResponce.getArticles());
+            articles.addAll(response);
 
             setRecyclerAdapter();
         });
@@ -89,7 +80,7 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
     }
 
     private void setRecyclerAdapter() {
-        adapter = new RecyclerAdapter(getContext(),articles, this, FragmentEnum.NEWS.name());
+        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), articles, this, FragmentEnum.NEWS.name());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
@@ -121,22 +112,15 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         startActivity(intent);
 
     }
-
-//    private void saveFavourite(Article article){
-//        Log.d(TAG,"Saved to fabvourites");
-//
-//        db.userDao().insert(article);
-//        adapter.notifyItemInserted(adapter.getItemCount());
-//    }
 }
 
 // Background thread for adding favourites
 class addFavouritesRunnable implements Runnable{
     Article article;
-    FavouritesViewmodel favouritesViewmodel;
+    FavouritesViewModel favouritesViewmodel;
 
     // TODO figure out how to access FavouritesViewModel witchout passing it through the favouritesClickListener
-    addFavouritesRunnable(Article article, FavouritesViewmodel favouritesViewmodel){
+    addFavouritesRunnable(Article article, FavouritesViewModel favouritesViewmodel){
         this.article = article;
         this.favouritesViewmodel = favouritesViewmodel;
     }

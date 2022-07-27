@@ -7,14 +7,15 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.example.news.Repository.ApiResponce;
+import com.example.news.ModelClasses.Article;
 import com.example.news.Repository.NewsRepository;
+
+import java.util.List;
 
 public class ArticlesViewModel extends ViewModel {
 
-    private final String TAG = "Debug";
-    private final NewsRepository newsRepository = NewsRepository.getInstance();
-    private final LiveData<ApiResponce> apiResponseLiveData;
+    private static final String TAG = "ArticlesViewModel";
+    private final LiveData<List<Article>> apiResponseLiveData;
     private final SavedStateHandle savedStateHandle;
 
     public ArticlesViewModel(SavedStateHandle savedStateHandle){
@@ -23,11 +24,12 @@ public class ArticlesViewModel extends ViewModel {
         LiveData<String> keywordLiveData = savedStateHandle.getLiveData("keyword");
 
         //TODO add language to the savedStateHandle
-        apiResponseLiveData = Transformations.switchMap(keywordLiveData, keyword -> newsRepository.getArticles(keyword));
+        NewsRepository newsRepository = NewsRepository.getInstance();
+        apiResponseLiveData = Transformations.switchMap(keywordLiveData, newsRepository::getArticles);
 
     }
 
-    public LiveData<ApiResponce> getApiResponseLiveData(){
+    public LiveData<List<Article>> getApiResponseLiveData(){
         Log.d(TAG,"getApiResponseLive data called");
         return apiResponseLiveData;
 

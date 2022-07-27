@@ -1,28 +1,20 @@
 package com.example.news.ViewModels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.news.DataBase.DataBase;
 import com.example.news.ModelClasses.Article;
 import com.example.news.Repository.DBRepository;
-import com.example.news.Aplication;
-import com.example.news.Repository.DBResponce;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class FavouritesViewmodel extends ViewModel {
+public class FavouritesViewModel extends ViewModel {
 
-    private final String TAG = "Debug";
+    private static final String TAG = "FavouritesViewModel";
     private final LiveData<List<Article>> favouritesLiveData;
     private final DBRepository dbRepository = new DBRepository();
 
-    public FavouritesViewmodel( ){
+    public FavouritesViewModel( ){
         super();
 //        favourites = favouritesDB.userDao().getAll();
         favouritesLiveData = dbRepository.getFavourites();

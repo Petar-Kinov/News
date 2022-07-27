@@ -2,13 +2,11 @@ package com.example.news.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,25 +18,17 @@ import com.example.news.DataBase.DataBase;
 import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
-import com.example.news.Repository.DBRepository;
-import com.example.news.Repository.DBResponce;
-import com.example.news.ViewModels.FavouritesViewmodel;
+import com.example.news.ViewModels.FavouritesViewModel;
 import com.example.news.WebViewActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 
 public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnArticleClickedListener {
 
-    private final String TAG = "Debug";
+    private static final String TAG = "FavouritesFragment";
     private RecyclerView favouritesRecyclerView;
-    private RecyclerAdapter adapter;
     private ArrayList<Article> favourites;
-    private FavouritesViewmodel favouritesViewModel;
-//    private SearchView searchView;
     private DataBase db;
 
     @Override
@@ -55,7 +45,7 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 
         setRecyclerAdapter();
 
-        favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewmodel.class);
+        FavouritesViewModel favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewModel.class);
 
         favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), articles -> {
 
@@ -73,11 +63,6 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 //            favourites.addAll(dbResponse.getFavourites());
 //            setRecyclerAdapter();
 //        });
-
-
-        // BACKGROUND THREAD
-//        getFavouritesRunnable getFavouritesRunnable = new getFavouritesRunnable();
-//        new Thread(getFavouritesRunnable).start();
 
 
 
@@ -110,7 +95,7 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 
         // TODO Change RecyclerAdapter to ListAdapter for better performance
 
-        adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
+        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         favouritesRecyclerView.setLayoutManager(layoutManager);

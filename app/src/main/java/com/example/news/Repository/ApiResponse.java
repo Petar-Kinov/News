@@ -4,7 +4,7 @@ import com.example.news.ModelClasses.Article;
 
 import java.util.ArrayList;
 
-public class ApiResponce {
+public class ApiResponse {
     private String status;
     private int totalResults;
     private ArrayList<Article> articles;

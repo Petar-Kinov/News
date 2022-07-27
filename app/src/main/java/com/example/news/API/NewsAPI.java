@@ -1,10 +1,6 @@
 package com.example.news.API;
 
-
-import com.example.news.ModelClasses.Article;
-import com.example.news.Repository.ApiResponce;
-
-import java.util.List;
+import com.example.news.Repository.ApiResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -15,10 +11,10 @@ public interface NewsAPI {
 
 
     @GET("v2/everything")
-    Call<ApiResponce> getResponce(@Query("q") String keyword,
-                                  @Query("from") String form,
-                                  @Query("sortBy") String publishedAt,
-                                  @Query("language") String language,
-                                  @Query("apiKey") String apiKey);
+    Call<ApiResponse> getResponse(@Query("q") String keyword,
+                                    @Query("from") String form,
+                                    @Query("sortBy") String publishedAt,
+                                    @Query("language") String language,
+                                    @Query("apiKey") String apiKey);
 
 }

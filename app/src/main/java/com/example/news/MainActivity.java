@@ -19,9 +19,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy {
 
-    private TabLayout tabLayout;
+    private static final String TAG = "MainActivity";
     private ViewPager2 viewPager2;
-    private final String TAG = "Debug";
     private ArrayList<String> tabTitles;
 
     private final NewsRepository newsRepository = NewsRepository.getInstance();
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tabLayout = findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
         viewPager2 = findViewById(R.id.viewPager2);
 
         ViewPagerAdapter viewPagerAdapter= new ViewPagerAdapter(MainActivity.this);
