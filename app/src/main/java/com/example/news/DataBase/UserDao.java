@@ -1,9 +1,10 @@
 package com.example.news.DataBase;
 
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.news.ModelClasses.Article;
@@ -14,10 +15,9 @@ import java.util.List;
 public interface UserDao {
 
     @Query("SELECT * From ArticleDB")
-    List<Article> getAll();
+    LiveData<List<Article>> getAll();
 
-
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Article article);
 
     @Delete

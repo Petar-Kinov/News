@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
     private ViewPager2 viewPager2;
     private final String TAG = "Debug";
     private ArrayList<String> tabTitles;
-    private Aplication aplication;
 
     private final NewsRepository newsRepository = NewsRepository.getInstance();
 
@@ -49,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
 
         new TabLayoutMediator(tabLayout,viewPager2,this).attach();
 
-        aplication = new Aplication(getApplicationContext());
+
+        Aplication aplication = new Aplication(getApplicationContext());
 
 
 

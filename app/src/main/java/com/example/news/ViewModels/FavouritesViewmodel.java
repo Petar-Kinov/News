@@ -3,6 +3,7 @@ package com.example.news.ViewModels;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.news.DataBase.DataBase;
@@ -13,13 +14,12 @@ import com.example.news.Repository.DBResponce;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FavouritesViewmodel extends ViewModel {
 
     private final String TAG = "Debug";
-    private final DataBase favouritesDB = Aplication.getInstance();
-    private final LiveData<DBResponce> favouritesLiveData;
-    private  List<Article> favourites = new ArrayList<>();
+    private final LiveData<List<Article>> favouritesLiveData;
     private final DBRepository dbRepository = new DBRepository();
 
     public FavouritesViewmodel( ){
@@ -30,11 +30,12 @@ public class FavouritesViewmodel extends ViewModel {
     }
 
 
-    public LiveData<DBResponce> getFavouritesLiveData(){
-        Log.d(TAG,"getApiResponseLive data called");
+    public LiveData<List<Article>> getFavouritesLiveData(){
         return favouritesLiveData;
-
     }
 
+    public void insertFavourite(Article article){
+        dbRepository.insertFavourite(article);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.news.Fragments;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import com.example.news.ModelClasses.Article;
 import com.example.news.R;
 import com.example.news.Repository.ApiResponce;
 import com.example.news.ViewModels.ArticlesViewModel;
+import com.example.news.ViewModels.FavouritesViewmodel;
 import com.example.news.WebViewActivity;
 
 import java.util.ArrayList;
@@ -33,8 +35,10 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
 
     private final String TAG = "Debug";
     private RecyclerView recyclerView;
+    private RecyclerAdapter adapter;
     private ArrayList<Article> articles;
     private ArticlesViewModel articlesViewModel;
+    private FavouritesViewmodel favouritesViewmodel;
     private SearchView searchView;
     private DataBase db;
 
@@ -51,6 +55,9 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         articles = new ArrayList<>();
         //Recycler Adapter
         setRecyclerAdapter();
+
+        favouritesViewmodel =new ViewModelProvider(this).get(FavouritesViewmodel.class);
+
         articlesViewModel = new ViewModelProvider(requireActivity()).get(ArticlesViewModel.class);
         articlesViewModel.getApiResponseLiveData().observe(requireActivity(), apiResponce -> {
             Log.d(TAG, "Live data changed. Size is " + apiResponce.getTotalResults());
@@ -82,7 +89,7 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
     }
 
     private void setRecyclerAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(getContext(),articles, this, FragmentEnum.NEWS.name());
+        adapter = new RecyclerAdapter(getContext(),articles, this, FragmentEnum.NEWS.name());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
@@ -97,13 +104,14 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
 
     @Override
     public void favouriteClickListener(int position) {
-        saveFavourite(articles.get(position));
-        Log.d(TAG,String.valueOf(db.userDao().getAll().size()));
+
+        addFavouritesRunnable addFavouritesRunnable = new addFavouritesRunnable(articles.get(position), favouritesViewmodel);
+        new Thread(addFavouritesRunnable).start();
     }
 
     @Override
     public void deleteClickListener(int position) {
-
+        // This button is hidden in the news fragment so this can remain empty
     }
 
 
@@ -114,9 +122,27 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
 
     }
 
-    private void saveFavourite(Article article){
-        Log.d(TAG,"Saved to fabvourites");
+//    private void saveFavourite(Article article){
+//        Log.d(TAG,"Saved to fabvourites");
+//
+//        db.userDao().insert(article);
+//        adapter.notifyItemInserted(adapter.getItemCount());
+//    }
+}
 
-        db.userDao().insert(article);
+// Background thread for adding favourites
+class addFavouritesRunnable implements Runnable{
+    Article article;
+    FavouritesViewmodel favouritesViewmodel;
+
+    // TODO figure out how to access FavouritesViewModel witchout passing it through the favouritesClickListener
+    addFavouritesRunnable(Article article, FavouritesViewmodel favouritesViewmodel){
+        this.article = article;
+        this.favouritesViewmodel = favouritesViewmodel;
+    }
+
+    @Override
+    public void run() {
+            favouritesViewmodel.insertFavourite(article);
     }
 }

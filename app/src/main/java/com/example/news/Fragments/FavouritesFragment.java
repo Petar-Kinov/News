@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,21 +21,25 @@ import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
 import com.example.news.Repository.DBRepository;
+import com.example.news.Repository.DBResponce;
 import com.example.news.ViewModels.FavouritesViewmodel;
 import com.example.news.WebViewActivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 
 public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnArticleClickedListener {
 
     private final String TAG = "Debug";
     private RecyclerView favouritesRecyclerView;
+    private RecyclerAdapter adapter;
     private ArrayList<Article> favourites;
     private FavouritesViewmodel favouritesViewModel;
 //    private SearchView searchView;
     private DataBase db;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,15 +49,37 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
         favouritesRecyclerView = view.findViewById(R.id.favouritesView);
         db = Aplication.getInstance();
 
+
         favourites = new ArrayList<>();
         //Recycler Adapter
+
         setRecyclerAdapter();
+
         favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewmodel.class);
-        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), dbResponse -> {
-            favourites.clear();
-            favourites.addAll(dbResponse.getFavourites());
-            setRecyclerAdapter();
-        });
+
+        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), articles -> {
+
+            // TODO when the list adapter is ready use adapter.submitList(List<Article>)
+                favourites.clear();
+                favourites.addAll(articles);
+                setRecyclerAdapter();
+            });
+
+//        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), dbResponse -> {
+//
+//            // TODO detect only change in the list instead of clearing and then adding the whole database
+//            Log.d(TAG, "onCreateView: observer triggered");
+//            favourites.clear();
+//            favourites.addAll(dbResponse.getFavourites());
+//            setRecyclerAdapter();
+//        });
+
+
+        // BACKGROUND THREAD
+//        getFavouritesRunnable getFavouritesRunnable = new getFavouritesRunnable();
+//        new Thread(getFavouritesRunnable).start();
+
+
 
         //TODO Search in Favourites
 
@@ -78,8 +105,12 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
         return view;
 
     }
+
     private void setRecyclerAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
+
+        // TODO Change RecyclerAdapter to ListAdapter for better performance
+
+        adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         favouritesRecyclerView.setLayoutManager(layoutManager);
@@ -87,6 +118,7 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
         favouritesRecyclerView.setAdapter(adapter);
     }
 
+    // opens web View with the clicked article's url
     @Override
     public void onClickListener(int position) {
         openWebViewActivity(favourites.get(position).getUrl());
@@ -94,13 +126,19 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 
     @Override
     public void favouriteClickListener(int position) {
-        saveFavourite(favourites.get(position));
-        Log.d(TAG,String.valueOf(db.userDao().getAll().size()));
+        // the favourites button is replaced with delete button in favourites fragment
+        // so no functionality is needed here
     }
 
     @Override
     public void deleteClickListener(int position) {
-        deleteFavourite(favourites.get(position));
+
+        deleteFavouriteRunnable deleteFavouriteRunnable = new deleteFavouriteRunnable(favourites.get(position));
+        new Thread(deleteFavouriteRunnable).start();
+
+//        db.userDao().delete(favourites.get(position));
+//        favourites.remove(position);
+//        adapter.notifyItemRemoved(position);
     }
 
 
@@ -111,14 +149,17 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 
     }
 
-    private void saveFavourite(Article article){
-        Log.d(TAG,"Saved to fabvourites");
+    // Background thread for deleting an article
+    class deleteFavouriteRunnable implements Runnable{
+        Article article;
 
-        db.userDao().insert(article);
+        deleteFavouriteRunnable(Article article){
+            this.article = article;
+        }
+        @Override
+        public void run() {
+            db.userDao().delete(article);
+        }
     }
 
-    private void deleteFavourite(Article article){
-        Log.d(TAG, String.valueOf(article.id));
-        db.userDao().delete(article);
-    }
 }

@@ -5,6 +5,9 @@ import com.example.news.ModelClasses.Article;
 import java.util.ArrayList;
 
 public class DBResponce {
+
+    // CLASS NOT USED ANYMORE
+
     private ArrayList<Article> favourites;
 
     public ArrayList<Article> getFavourites() {
