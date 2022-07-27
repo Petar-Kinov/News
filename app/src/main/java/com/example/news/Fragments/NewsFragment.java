@@ -1,6 +1,7 @@
 package com.example.news.Fragments;
 
 import android.content.Intent;
+import android.hardware.lights.LightState;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import com.example.news.Adapters.RecyclerAdapter;
+import com.example.news.Adapters.ArticleListAdapter;
 import com.example.news.ENUMS.FragmentEnum;
 import com.example.news.ModelClasses.Article;
 import com.example.news.R;
@@ -24,13 +25,14 @@ import com.example.news.ViewModels.FavouritesViewModel;
 import com.example.news.WebViewActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleClickedListener {
+public class NewsFragment extends Fragment implements ArticleListAdapter.OnClickListener {
 
     private static final String TAG = "NewsFragment";
     private RecyclerView recyclerView;
-    private ArrayList<Article> articles;
+    private List<Article> articles;
     private ArticlesViewModel articlesViewModel;
     private FavouritesViewModel favouritesViewmodel;
     private SearchView searchView;
@@ -45,17 +47,21 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
         articles = new ArrayList<>();
 
         //Recycler Adapter
-        setRecyclerAdapter();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        ArticleListAdapter adapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(),this , FragmentEnum.NEWS.name());
+        adapter.submitList(articles);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
 
         favouritesViewmodel =new ViewModelProvider(this).get(FavouritesViewModel.class);
 
         articlesViewModel = new ViewModelProvider(requireActivity()).get(ArticlesViewModel.class);
         articlesViewModel.getApiResponseLiveData().observe(requireActivity(), response -> {
             Log.d(TAG, "Live data changed. Size is " + response);
-            articles.clear();
-            articles.addAll(response);
-
-            setRecyclerAdapter();
+            articles = response;
+            adapter.submitList(response);
         });
 
         // Search view functionality
@@ -77,15 +83,6 @@ public class NewsFragment extends Fragment implements RecyclerAdapter.OnArticleC
 
         return view;
 
-    }
-
-    private void setRecyclerAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), articles, this, FragmentEnum.NEWS.name());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
     }
 
     @Override

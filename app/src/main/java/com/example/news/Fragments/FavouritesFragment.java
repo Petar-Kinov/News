@@ -2,6 +2,7 @@ package com.example.news.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.news.Adapters.RecyclerAdapter;
+import com.example.news.Adapters.ArticleListAdapter;
 import com.example.news.Aplication;
 import com.example.news.DataBase.DataBase;
 import com.example.news.ENUMS.FragmentEnum;
@@ -21,14 +22,13 @@ import com.example.news.R;
 import com.example.news.ViewModels.FavouritesViewModel;
 import com.example.news.WebViewActivity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
-public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnArticleClickedListener {
+public class FavouritesFragment extends Fragment implements ArticleListAdapter.OnClickListener {
 
     private static final String TAG = "FavouritesFragment";
-    private RecyclerView favouritesRecyclerView;
-    private ArrayList<Article> favourites;
+    private List<Article> favourites;
     private DataBase db;
 
     @Override
@@ -36,35 +36,23 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
-        favouritesRecyclerView = view.findViewById(R.id.favouritesView);
+        RecyclerView favouritesRecyclerView = view.findViewById(R.id.favouritesView);
         db = Aplication.getInstance();
 
 
-        favourites = new ArrayList<>();
         //Recycler Adapter
-
-        setRecyclerAdapter();
+        final ArticleListAdapter articleListAdapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(), this, FragmentEnum.FAVOURITES.name());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
+        favouritesRecyclerView.setLayoutManager(layoutManager);
+        favouritesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        favouritesRecyclerView.setAdapter(articleListAdapter);
 
         FavouritesViewModel favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewModel.class);
 
         favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), articles -> {
-
-            // TODO when the list adapter is ready use adapter.submitList(List<Article>)
-                favourites.clear();
-                favourites.addAll(articles);
-                setRecyclerAdapter();
-            });
-
-//        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), dbResponse -> {
-//
-//            // TODO detect only change in the list instead of clearing and then adding the whole database
-//            Log.d(TAG, "onCreateView: observer triggered");
-//            favourites.clear();
-//            favourites.addAll(dbResponse.getFavourites());
-//            setRecyclerAdapter();
-//        });
-
-
+            favourites = articles;
+            articleListAdapter.submitList(articles);
+        });
 
         //TODO Search in Favourites
 
@@ -91,17 +79,23 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
 
     }
 
-    private void setRecyclerAdapter() {
-
-        // TODO Change RecyclerAdapter to ListAdapter for better performance
-
-        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-
-        favouritesRecyclerView.setLayoutManager(layoutManager);
-        favouritesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        favouritesRecyclerView.setAdapter(adapter);
-    }
+//    private void setRecyclerAdapter() {
+//
+//        // TODO Change RecyclerAdapter to ListAdapter for better performance
+//
+////        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
+//        Log.d(TAG, "setRecyclerAdapter: called");
+//
+//        final ArticleListAdapter articleListAdapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(), favourites, this, FragmentEnum.FAVOURITES.name());
+////        Log.d(TAG, "setRecyclerAdapter: " + articleListAdapter.getCurrentList().get(0).getTitle());
+//
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
+//        articleListAdapter.submitList(favourites);
+//
+//        favouritesRecyclerView.setLayoutManager(layoutManager);
+//        favouritesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        favouritesRecyclerView.setAdapter(articleListAdapter);
+//    }
 
     // opens web View with the clicked article's url
     @Override
@@ -118,6 +112,7 @@ public class FavouritesFragment extends Fragment implements RecyclerAdapter.OnAr
     @Override
     public void deleteClickListener(int position) {
 
+        Log.d(TAG, "deleteClickListener: clicked delete");
         deleteFavouriteRunnable deleteFavouriteRunnable = new deleteFavouriteRunnable(favourites.get(position));
         new Thread(deleteFavouriteRunnable).start();
 
