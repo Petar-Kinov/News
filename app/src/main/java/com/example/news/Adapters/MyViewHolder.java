@@ -39,32 +39,6 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         deleteButton.setOnClickListener(view -> onClickListener.deleteClickListener(getAdapterPosition()));
     }
 
-    //    private TextView titleText;
-//    private ImageView newsImage;
-//    private TextView date;
-//
-//    private ArrayList<Article> articles;
-//    private final Context context;
-//    private static OnArticleClickedListener onArticleClickedListener;
-//    private Button favouriteButton;
-//    private Button deleteButton;
-//    private String fragment;
-//
-//    public MyViewHolder(final View view, OnArticleClickedListener onArticleClickedListener){
-//        super(view);
-//        titleText = view.findViewById(R.id.headline);
-//        newsImage = view.findViewById(R.id.NewsImage);
-//        date = view.findViewById(R.id.date);
-////            itemView.setOnClickListener(this);
-//        MyViewHolder.onArticleClickedListener = onArticleClickedListener;
-//        itemView.setOnClickListener(view1 -> onArticleClickedListener.onClickListener(getAdapterPosition()));
-//        favouriteButton = view.findViewById(R.id.addFavouritesButton);
-//        favouriteButton.setOnClickListener(view1 -> onArticleClickedListener.favouriteClickListener(getAdapterPosition()));
-//
-//        deleteButton = view.findViewById(R.id.deleteButton);
-//        deleteButton.setOnClickListener(view1 -> onArticleClickedListener.deleteClickListener(getAdapterPosition()));
-//    }
-//
     public void bind(Context context, Article article, String fragment) {
         Log.d(TAG, "bind: called" + article.getTitle());
         title.setText(article.getTitle());
@@ -85,10 +59,4 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         Log.d(TAG, "create: my view holder called");
         return new MyViewHolder(view, onClickListener);
     }
-//
-//    public interface OnArticleClickedListener {
-//        void onClickListener (int position);
-//        void favouriteClickListener(int position);
-//        void deleteClickListener(int position);
-//    }
 }

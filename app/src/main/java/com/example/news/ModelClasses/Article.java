@@ -14,6 +14,14 @@ public class Article {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @ColumnInfo(name = "title")
     private String title;
 
@@ -82,23 +90,11 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return title.equals(article.title) && url.equals(article.url) && description.equals(article.description) && urlToImage.equals(article.urlToImage) && publishedAt.equals(article.publishedAt);
+        return id == article.id && title.equals(article.title) && url.equals(article.url) && description.equals(article.description) && urlToImage.equals(article.urlToImage) && publishedAt.equals(article.publishedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, url, description, urlToImage, publishedAt);
+        return Objects.hash(id, title, url, description, urlToImage, publishedAt);
     }
-
-    public static DiffUtil.ItemCallback<Article> itemCallback = new DiffUtil.ItemCallback<Article>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.getTitle().equals(newItem.getTitle());
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }

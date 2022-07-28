@@ -1,5 +1,7 @@
 package com.example.news.ViewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -7,6 +9,7 @@ import com.example.news.ModelClasses.Article;
 import com.example.news.Repository.DBRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FavouritesViewModel extends ViewModel {
 
@@ -27,7 +30,8 @@ public class FavouritesViewModel extends ViewModel {
     }
 
     public void insertFavourite(Article article) {
-        dbRepository.insertFavourite(article);
+            dbRepository.insertFavourite(article);
+//        }
     }
 
 }

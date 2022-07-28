@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.news.DataBase.DataBase;
 
-public class Aplication {
+public final class Aplication {
     private static DataBase db;
 
     public Aplication(Context context) {

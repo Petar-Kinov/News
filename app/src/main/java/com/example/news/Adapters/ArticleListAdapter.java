@@ -59,12 +59,9 @@ public class ArticleListAdapter extends ListAdapter<Article, MyViewHolder> {
 
         @Override
         public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
-            return oldItem.getTitle().equals(newItem.getTitle());
+            return oldItem.equals(newItem);
         }
-
-
     }
-
 
     public interface OnClickListener {
         void onClickListener(int position);
@@ -74,68 +71,4 @@ public class ArticleListAdapter extends ListAdapter<Article, MyViewHolder> {
         void deleteClickListener(int position);
     }
 }
-//    protected ArticleListAdapter(@NonNull DiffUtil.ItemCallback diffCallback) {
-//        super(diffCallback);
-//    }
-//
-//    @NonNull
-//    @Override
-//    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        return;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-//
-//    }
-//
-//class ArticleListAdapter extends ListAdapter<Article, MyViewHolder> {
-//
-//    protected ArticleListAdapter(@NonNull DiffUtil.ItemCallback<Article> diffCallback) {
-//        super(diffCallback);
-//    }
-//
-//    @NonNull
-//    @Override
-//    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_card, parent,false), this );
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-//
-//    }
-//}
-
-
-//}
-//public class ArticleListAdapter extends ListAdapter<Article, ArticleListAdapter> {
-//
-//    public ArticleListAdapter(@NonNull DiffUtil.ItemCallback<Article> diffCallback) {
-//        super(diffCallback);
-//    }
-//
-//    @Override
-//    public ArticleListAdapter onCreateViewHolder(ViewGroup parent, int viewType) {
-//        return ArticleListAdapter.;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(ArticleListAdapter holder, int position) {
-//        Article current = getItem(position);
-//        holder.bind(current.getWord());
-//    }
-//
-//    static class WordDiff extends DiffUtil.ItemCallback<Word> {
-//
-//        @Override
-//        public boolean areItemsTheSame(@NonNull Word oldItem, @NonNull Word newItem) {
-//            return oldItem == newItem;
-//        }
-//
-//        @Override
-//        public boolean areContentsTheSame(@NonNull Word oldItem, @NonNull Word newItem) {
-//            return oldItem.getWord().equals(newItem.getWord());
-//        }
-//    }
 

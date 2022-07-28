@@ -20,6 +20,8 @@ import com.example.news.R;
 
 import java.util.ArrayList;
 
+// NOW USING ListAdapter with DiffUtil
+
 //public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
 //    private static final String TAG = "RecyclerAdapter";
 //    private ArrayList<Article> articles;

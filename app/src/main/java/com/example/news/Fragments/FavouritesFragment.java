@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,8 +29,9 @@ import java.util.List;
 public class FavouritesFragment extends Fragment implements ArticleListAdapter.OnClickListener {
 
     private static final String TAG = "FavouritesFragment";
-    private List<Article> favourites;
+    private List<Article> articles;
     private DataBase db;
+    private TextView noArticleFoundText ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,8 +39,9 @@ public class FavouritesFragment extends Fragment implements ArticleListAdapter.O
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
         RecyclerView favouritesRecyclerView = view.findViewById(R.id.favouritesView);
-        db = Aplication.getInstance();
+        noArticleFoundText = view.findViewById(R.id.noArticlesFoundText2);
 
+        db = Aplication.getInstance();
 
         //Recycler Adapter
         final ArticleListAdapter articleListAdapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(), this, FragmentEnum.FAVOURITES.name());
@@ -49,58 +52,23 @@ public class FavouritesFragment extends Fragment implements ArticleListAdapter.O
 
         FavouritesViewModel favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewModel.class);
 
-        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), articles -> {
-            favourites = articles;
-            articleListAdapter.submitList(articles);
+        favouritesViewModel.getFavouritesLiveData().observe(requireActivity(), response -> {
+            articles = response;
+            articleListAdapter.submitList(response);
+            if (response.size() == 0){
+                noArticleFoundText.setVisibility(View.VISIBLE);
+            } else {
+                noArticleFoundText.setVisibility(View.GONE);
+            }
         });
 
-        //TODO Search in Favourites
-
-        // Search view functionality
-//        searchView = view.findViewById(R.id.searchView);
-//        searchView.setQueryHint("Search");
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                articlesViewModel.setKeyword(searchView.getQuery().toString());
-//                searchView.clearFocus();
-////                searchView.setIconified(true);
-//                return false;
-//            }
-
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                return false;
-//            }
-//        });
-
-
         return view;
-
     }
-
-//    private void setRecyclerAdapter() {
-//
-//        // TODO Change RecyclerAdapter to ListAdapter for better performance
-//
-////        RecyclerAdapter adapter = new RecyclerAdapter(getContext(), favourites, this, FragmentEnum.FAVOURITES.name());
-//        Log.d(TAG, "setRecyclerAdapter: called");
-//
-//        final ArticleListAdapter articleListAdapter = new ArticleListAdapter(new ArticleListAdapter.ArticleDiff(), favourites, this, FragmentEnum.FAVOURITES.name());
-////        Log.d(TAG, "setRecyclerAdapter: " + articleListAdapter.getCurrentList().get(0).getTitle());
-//
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
-//        articleListAdapter.submitList(favourites);
-//
-//        favouritesRecyclerView.setLayoutManager(layoutManager);
-//        favouritesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        favouritesRecyclerView.setAdapter(articleListAdapter);
-//    }
 
     // opens web View with the clicked article's url
     @Override
     public void onClickListener(int position) {
-        openWebViewActivity(favourites.get(position).getUrl());
+        openWebViewActivity(articles.get(position).getUrl());
     }
 
     @Override
@@ -111,22 +79,16 @@ public class FavouritesFragment extends Fragment implements ArticleListAdapter.O
 
     @Override
     public void deleteClickListener(int position) {
-
         Log.d(TAG, "deleteClickListener: clicked delete");
-        deleteFavouriteRunnable deleteFavouriteRunnable = new deleteFavouriteRunnable(favourites.get(position));
+        deleteFavouriteRunnable deleteFavouriteRunnable = new deleteFavouriteRunnable(articles.get(position));
         new Thread(deleteFavouriteRunnable).start();
 
-//        db.userDao().delete(favourites.get(position));
-//        favourites.remove(position);
-//        adapter.notifyItemRemoved(position);
     }
-
 
     public void openWebViewActivity(String url) {
         Intent intent = new Intent(this.getActivity(), WebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
-
     }
 
     // Background thread for deleting an article
